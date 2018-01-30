@@ -36,6 +36,8 @@
  */
 unsigned char scriptdata[] SCRIPT_SECTION = {SCRIPT_CMD_END}; // dummy (is overwritten by hex creator)
 
+#define usart_txStatus(1, c2, s) hal_txUSART(0x0D); hal_txUSART(0x0A); hal_txUSART(c1); hal_txUSART(c2); hal_txUSART(':'); hal_txUSART('0'+s); 
+
 /**
  * @brief Execute script stored in flash memory
  * @retval 1 Everything okay
@@ -55,10 +57,12 @@ uint8_t script_run() {
 
             case SCRIPT_CMD_CONNECT:
                 success = isp_connect(flash_readbyte(scriptdata_p++));
+				usart_txStatus('C', 'O', success);
                 break;
 
             case SCRIPT_CMD_DISCONNECT:
                 success = isp_disconnect();
+				usart_txStatus('D', 'I', success);
                 break;
 
             case SCRIPT_CMD_WAIT:
@@ -68,6 +72,7 @@ uint8_t script_run() {
                     clock_delayFast(CLOCK_TICKER_FAST_10MS);
                 }
                 success = 1;
+				usart_txStatus('W', 'T', success);
             }
                 break;
 
@@ -79,6 +84,7 @@ uint8_t script_run() {
                     data[i] = flash_readbyte(scriptdata_p++);
                 isp_transmit(data, sizeof (data));
                 success = 1;
+				usart_txStatus('S', 'S', success);
             }
                 break;
 
@@ -97,6 +103,7 @@ uint8_t script_run() {
 
                 if (data[3] == verifybyte) success = 1;
                 else success = 0;
+				usart_txStatus('S', 'V', success);
             }
                 break;
             case SCRIPT_CMD_FLASH:
@@ -125,6 +132,7 @@ uint8_t script_run() {
                 }
 
                 scriptdata_p += length;
+				usart_txStatus('F', 'L', success);
             }
                 break;
 
@@ -134,10 +142,12 @@ uint8_t script_run() {
                 startvalue |= (uint16_t) flash_readbyte(scriptdata_p++);
                 counter_decrement(startvalue);
                 success = 1;
+				usart_txStatus('D', 'C', success);
             }
                 break;
 
             case SCRIPT_CMD_END:
+				usart_txStatus('E', 'D', success);
                 return 1;
                 break;
         }
