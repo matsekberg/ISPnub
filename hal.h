@@ -38,9 +38,9 @@
 #define hal_setLEDred(x) PORTC = (PORTC & ~(1 << PC3)) | ((!x) << PC3)
 #define hal_setLEDgreen(x) PORTD = (PORTC & ~(1 << PD4)) | ((!x) << PD4)
 #define hal_initUSART() UBRR0L = BAUD_PRESCALE; UBRR0H = (BAUD_PRESCALE >> 8); UCSR0B = (1 << TXEN0);
-#define hal_txUSART(x) while (!( UCSRA0 & (1 << UDRE0))); UDR0 = data;
+#define hal_txUSART(x) while (!( UCSRA0 & (1 << UDRE0))); UDR0 = x;
 
-#define flash_readbyte(x) pgm_read_byte_far(x)
+#define flash_readbyte(x) pgm_read_byte(x)
 
 #define	ISP_OUT   PORTB
 #define ISP_IN    PINB
@@ -63,7 +63,7 @@
 #define hal_setLEDred(x) PORTC = (PORTC & ~(1 << PC3)) | ((!x) << PC3)
 #define hal_setLEDgreen(x) PORTD = (PORTC & ~(1 << PD4)) | ((!x) << PD4)
 #define hal_initUSART() UBRR0L = BAUD_PRESCALE; UBRR0H = (BAUD_PRESCALE >> 8); UCSR0B = (1 << TXEN0);
-#define hal_txUSART(x) while (!( UCSRA0 & (1 << UDRE0))); UDR0 = data;#define DEFINE_DATAPOINTER uint32_t scriptdata_p = FAR(scriptdata);
+#define hal_txUSART(x) while (!( UCSRA0 & (1 << UDRE0))); UDR0 = x;
 
 #define flash_readbyte(x) pgm_read_byte_far(x)
 
