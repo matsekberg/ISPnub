@@ -28,30 +28,8 @@
 #define USART_BAUDRATE 38400
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
-// ******************************** ATmega8 *************************************
-#if defined (__AVR_ATmega8__)
-
-#define DEFINE_DATAPOINTER uint16_t scriptdata_p = (uint16_t)scriptdata
-#define hal_init() DDRC = 0x03; PORTC = 0xfe; // all inputs except PC0 and PC1
-#define hal_getSwitch() ((PINC & (1 << PC2)) == 0)
-#define hal_setLEDgreen(x) PORTC = (PORTC & ~(1 << PC0)) | ((!x) << PC0)
-#define hal_setLEDred(x) PORTC = (PORTC & ~(1 << PC1)) | ((!x) << PC1)
-#define hal_initUSART() UBRR0L = BAUD_PRESCALE; UBRR0H = (BAUD_PRESCALE >> 8); UCSR0B = (1 << TXEN0);
-#define hal_txUSART(x) while (!( UCSRA0 & (1 << UDRE0))); UDR0 = data;
-
-#define flash_readbyte(x) pgm_read_byte(x)
-
-#define	ISP_OUT   PORTB
-#define ISP_IN    PINB
-
-#define ISP_DDR   DDRB
-#define ISP_RST   PB2
-#define ISP_MOSI  PB3
-#define ISP_MISO  PB4
-#define ISP_SCK   PB5
-
 // ******************************** ATmega324P ***********************************
-#elif defined (__AVR_ATmega324P__)
+#if defined (__AVR_ATmega324P__)
 
 #define DEFINE_DATAPOINTER uint16_t scriptdata_p = (uint16_t)scriptdata
 
