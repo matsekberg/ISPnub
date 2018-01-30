@@ -36,7 +36,7 @@
  */
 unsigned char scriptdata[] SCRIPT_SECTION = {SCRIPT_CMD_END}; // dummy (is overwritten by hex creator)
 
-#define usart_txStatus(1, c2, s) hal_txUSART(0x0D); hal_txUSART(0x0A); hal_txUSART(c1); hal_txUSART(c2); hal_txUSART(':'); hal_txUSART('0'+s); 
+#define usart_txStatus(c1, c2, s) hal_txUSART(0x0D); hal_txUSART(0x0A); hal_txUSART(c1); hal_txUSART(c2); hal_txUSART(':'); hal_txUSART('0'+s); 
 
 /**
  * @brief Execute script stored in flash memory
