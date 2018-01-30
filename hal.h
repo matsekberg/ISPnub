@@ -51,10 +51,9 @@
 #define ISP_SCK   PB5
 
 // ******************************** ATmega324P ***********************************
-#elif defined (__AVR_ATmega328P__)
+#elif defined (__AVR_ATmega324P__)
 
-#define hal_initUSART() UBRR0L = BAUD_PRESCALE; UBRR0H = (BAUD_PRESCALE >> 8); UCSR0B = (1 << TXEN0);
-#define hal_txUSART(x) while (!( UCSRA0 & (1 << UDRE0))); UDR0 = data;#define DEFINE_DATAPOINTER uint32_t scriptdata_p = FAR(scriptdata);
+#define DEFINE_DATAPOINTER uint16_t scriptdata_p = (uint16_t)scriptdata
 
 #define hal_init() DDRC = (1 << PC3); DDRD = (1 << PD4); PORTD = ~(1 << PD4); // all inputs except PC3 and PD4
 #define hal_getSwitch() ((PIND & (1 << PD3)) == 0)
@@ -85,7 +84,8 @@
 #define hal_getSwitch() ((PIND & (1 << PD3)) == 0)
 #define hal_setLEDred(x) PORTC = (PORTC & ~(1 << PC3)) | ((!x) << PC3)
 #define hal_setLEDgreen(x) PORTD = (PORTC & ~(1 << PD4)) | ((!x) << PD4)
-
+#define hal_initUSART() UBRR0L = BAUD_PRESCALE; UBRR0H = (BAUD_PRESCALE >> 8); UCSR0B = (1 << TXEN0);
+#define hal_txUSART(x) while (!( UCSRA0 & (1 << UDRE0))); UDR0 = data;#define DEFINE_DATAPOINTER uint32_t scriptdata_p = FAR(scriptdata);
 
 #define flash_readbyte(x) pgm_read_byte_far(x)
 
