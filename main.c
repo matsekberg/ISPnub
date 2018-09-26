@@ -68,7 +68,7 @@
 int main(void) {
 
     hal_init();
-	lan_initUSART();
+    hal_initUSART();
     clock_init();
 
     // enable interrupts
