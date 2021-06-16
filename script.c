@@ -36,7 +36,8 @@
  */
 unsigned char scriptdata[] SCRIPT_SECTION = {SCRIPT_CMD_END}; // dummy (is overwritten by hex creator)
 
-#define usart_txStatus(c1, c2, s) hal_txUSART(0x0D); hal_txUSART(0x0A); hal_txUSART(c1); hal_txUSART(c2); hal_txUSART(':'); hal_txUSART('0'+s); 
+//#define  usart_txStatus(c1, c2, s)    hal_txUSART(0x0D);
+//#define  usart_txStatus(c1, c2, s)    hal_txUSART(0x0D); hal_txUSART(0x0A); hal_txUSART(c1); hal_txUSART(c2); hal_txUSART(':'); hal_txUSART('0'+s);
 
 /**
  * @brief Execute script stored in flash memory
@@ -52,17 +53,18 @@ uint8_t script_run() {
         cmd = flash_readbyte(scriptdata_p++);
 
         uint8_t success = 0;
+		hal_txUSART(0x0D); hal_txUSART(0x0A); 
 
         switch (cmd) {
 
             case SCRIPT_CMD_CONNECT:
                 success = isp_connect(flash_readbyte(scriptdata_p++));
-				usart_txStatus('C', 'O', success);
+				hal_txUSART('C'); hal_txUSART('O'); hal_txUSART(':'); hal_txUSART('0'+success);
                 break;
 
             case SCRIPT_CMD_DISCONNECT:
                 success = isp_disconnect();
-				usart_txStatus('D', 'I', success);
+				hal_txUSART('D'); hal_txUSART('I'); hal_txUSART(':'); hal_txUSART('0'+success);
                 break;
 
             case SCRIPT_CMD_WAIT:
@@ -72,7 +74,7 @@ uint8_t script_run() {
                     clock_delayFast(CLOCK_TICKER_FAST_10MS);
                 }
                 success = 1;
-				usart_txStatus('W', 'T', success);
+				hal_txUSART('W'); hal_txUSART('T'); hal_txUSART(':'); hal_txUSART('0'+success);
             }
                 break;
 
@@ -84,7 +86,7 @@ uint8_t script_run() {
                     data[i] = flash_readbyte(scriptdata_p++);
                 isp_transmit(data, sizeof (data));
                 success = 1;
-				usart_txStatus('S', 'S', success);
+				hal_txUSART('S'); hal_txUSART('S'); hal_txUSART(':'); hal_txUSART('0'+success);
             }
                 break;
 
@@ -103,7 +105,7 @@ uint8_t script_run() {
 
                 if (data[3] == verifybyte) success = 1;
                 else success = 0;
-				usart_txStatus('S', 'V', success);
+				hal_txUSART('S'); hal_txUSART('V'); hal_txUSART(':'); hal_txUSART('0'+success);
             }
                 break;
             case SCRIPT_CMD_FLASH:
@@ -132,7 +134,7 @@ uint8_t script_run() {
                 }
 
                 scriptdata_p += length;
-				usart_txStatus('F', 'L', success);
+				hal_txUSART('F'); hal_txUSART('L'); hal_txUSART(':'); hal_txUSART('0'+success);
             }
                 break;
 
@@ -142,12 +144,12 @@ uint8_t script_run() {
                 startvalue |= (uint16_t) flash_readbyte(scriptdata_p++);
                 counter_decrement(startvalue);
                 success = 1;
-				usart_txStatus('D', 'C', success);
+				hal_txUSART('D'); hal_txUSART('C'); hal_txUSART(':'); hal_txUSART('0'+success);
             }
                 break;
 
             case SCRIPT_CMD_END:
-				usart_txStatus('E', 'D', success);
+				hal_txUSART('E'); hal_txUSART('D'); hal_txUSART(':'); hal_txUSART('0'+success);
                 return 1;
                 break;
         }
